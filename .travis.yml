@@ -1,0 +1,18 @@
+language: python
+dist: trusty
+cache:
+- pip
+python:
+- '3.6'
+script:
+- echo '42'
+deploy:
+  provider: pypi
+  username: giuliocalzo
+  password:
+    secure: Zg9LVZSYb92U2vyYOojSIxNR3/ilKIwCRQxpyYEPiIu2uuvj8qoWUNBgkdsSIyXC299BdH4//6TL2VvZj6ChLTOJ6Xg9TGlaLC8LBdPly145/LVNJ5BJhTAaQrVD6G0qOM+mvf4ffQmvgQFFazmQTsvq1KENZIG/BzDM6dJ7ixsthois+D/hwug7azYcM6S8AC5MrnpIsHwbi4CFtP553zym3916hUzx2F28Xeo3WmuSuMUvZ+wQAaGvJSy4xds2G/Z4Fmj7DPI0rAM7UeOmPFLiM6uBnhl8xMC03IbgQGxnUx46BpuBwzLXRuJcHv8kKXqNM4OMBAhwUpImpBZhAIv334/PCqwCFV3Jy/IMMuB73uHCzCA+DYmkq88XbUoCU0fUIHna3y+bZAfm+Zc5dzdd1ubT0Bh+yi1IeQKS7eSVy5foyP4S3lr6AFg599oKSw0c/obThhZuHD8KK3SbRW8tToZpwIsZ36hvTRh/sc/E1fy2XYUUYdCVNnOtmSQIXXgIeeTK8Yc4RV7bVsPTZ55ekws3X0dj7ingjRnNpalz5JT3BnCz8Fp75WJsl8mprdCrOFt6RPB4ZTplZQLS87I1ejcDn3XpyvahN0Uz0BkEPXK1nqo6FzpPpITanoXxwEr8r2NXkEmsaf2KJTqnfi3+vRLVXl2MQtaTDOCygLE=
+  skip_existing: true
+  distributions: sdist bdist_wheel
+  on:
+    tags: true
+    all_branches: true
