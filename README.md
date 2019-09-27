@@ -53,24 +53,15 @@ To obtain the security token for your Salesforce account, follow
 
 ## Usage
 
-```
-(salesforce-expense) bash-3.2$ expense add --help
-Usage: expense add [OPTIONS]
+At present the only command is `add`.
 
-Options:
-  -p, --project TEXT              Project Name
-  -d, --description TEXT          Description to add
-  -a, --amount FLOAT              amount to add
-  --date TEXT                     Date
-  --currency [EUR|USD|GBP]        currency
-  --category [Client entertainment|Car hire|Flights|Fuel|Internet|IT consumables|IT services (subscription &amp; licences)|Mileage|Office supplies and comsumables|Other|Parking & Tolls|Per Diem|Private Accommodation|Professional training & Exam|Staff entertainment|Staff welfare|Subsistence|Taxi|Trains|Transport - other|Weekly Groceries|Telephony]
-                                  category
-  --noreceipt                     Lost receipt
-  --billable / --non-billable     billable flag
-  --inpolicy [Yes|No]             In Policy
-  --help                          Show this message and exit.
-
+```bash
+expense add -p 'PX9999 - [REMOTE] - Onsite' -d 'Accomdoation on-site' -a 149.61 --date 2019-10-21 --currency NOK --non-billable --category Accommodation -f receipt.pdf
 ```
+
+`billable` defaults to true, and the type defaults to `Sustenance`. Other
+values will be prompted for. If you don't specify a file to upload, the script
+will request access to your webcam and try to grab a photo that way.
 
 ## TODO
 
