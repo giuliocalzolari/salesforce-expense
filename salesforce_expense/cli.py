@@ -24,7 +24,7 @@ logger.setLevel(logging.INFO)
 te = TimecardEntry()
 
 
-CATEGORY = ["Client entertainment", "Car hire", "Flights", "Fuel", "Internet", "IT consumables" , "IT services (subscription &amp; licences)", "Mileage",
+CATEGORY = ["Accommodation", "Client entertainment", "Car hire", "Flights", "Fuel", "Internet", "IT consumables" , "IT services (subscription &amp; licences)", "Mileage",
     "Office supplies and comsumables", "Other", "Parking & Tolls", "Per Diem" , "Private Accommodation", "Professional training & Exam",
     "Staff entertainment", "Staff welfare", "Subsistence", "Taxi", "Trains", "Transport - other", "Weekly Groceries", "Telephony"]
 
@@ -130,7 +130,7 @@ def show_webcam(image_name):
  "--date", default=date.today().strftime("%Y-%m-%d"), help="Date") 
 @click.option(
     "--currency",
-    type=click.Choice(["EUR", "USD" , "GBP"]),
+    type=click.Choice(["EUR", "USD" , "GBP", "NOK"]),
     default="EUR",
     help="currency")
 @click.option(
@@ -139,15 +139,17 @@ def show_webcam(image_name):
     default="Subsistence",
     help="category")
 @click.option("--noreceipt", default=False, is_flag=True, help="Lost receipt") 
-@click.option("--billable/--not-billable", default=True,  is_flag=True, help="billable flag")
+@click.option("--billable/--non-billable", default=True, help="billable flag")
 @click.option(
     "--inpolicy",
     type=click.Choice(["Yes", "No"]),
     default="Yes",
     help="In Policy")
+@click.option(
+    "-f", "--filename", default="", help="Receipt")
 @click.pass_context
 @catch_exceptions
-def add(ctx, project, description, amount, date, currency, category, noreceipt, billable, inpolicy):
+def add(ctx, project, description, amount, date, currency, category, noreceipt, billable, inpolicy, filename):
     assignment_id = None
     active_assignment = te.get_assignments_active()
     for _, assign in active_assignment.items():
@@ -169,9 +171,14 @@ def add(ctx, project, description, amount, date, currency, category, noreceipt, 
         assignment_id = nice_assign[int(select_assign)]
         
     project_id = active_assignment[assignment_id]["project_id"]
-    _billable = active_assignment[assignment_id].get("billable", None)
-    if not _billable:
-        _billable = billable
+
+    # this code checks if the assignment is a billable one, and if so it
+    # overrides the billable flag. this doesn't really make sense
+    # _billable = active_assignment[assignment_id].get("billable", None)
+    #
+    # if not _billable:
+    #     _billable = billable
+    _billable = billable
 
     if category == "":
         nice_data = []
@@ -210,14 +217,17 @@ def add(ctx, project, description, amount, date, currency, category, noreceipt, 
             'In_Policy__c': inpolicy,
     }
 
-    
-    expense_id = te._upload_expense(new_exp)
+
+    expense_id = te._upload_expense(new_exp)  # dry_run=True
     if noreceipt == False:
-        image_name = str(datetime.now().strftime("%Y_%m_%d_%H_%M")) + '.jpg'
-        show_webcam(image_name)
+        if filename == "":
+            image_name = str(datetime.now().strftime("%Y_%m_%d_%H_%M")) + '.jpg'
+            show_webcam(image_name)
+        else:
+            image_name = filename
         te._upload_image(image_name ,expense_id)
-        os.remove(image_name)
+        if filename == "":
+            os.remove(image_name)
 
 
     logger.info("Expense added")
-
