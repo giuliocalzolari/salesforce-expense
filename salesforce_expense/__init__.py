@@ -1,7 +1,7 @@
 __title__ = "salesforce-expense"
 __description__ = "PSE Expense CLI"
 __url__ = "https://github.com/giuliocalzolari/salesforce-expense"
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 __author__ = "giuliocalzolari"
 __author_email__ = "giuliocalzolari@users.noreply.github.com"
 __license__ = "WTFPL"

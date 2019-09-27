@@ -9,7 +9,7 @@ click = "*"
 tabulate = "*"
 click-aliases = "*"
 opencv-python = "*"
-
+setupext-janitor = "*"
 
 [dev-packages]
 pytest = "*"
