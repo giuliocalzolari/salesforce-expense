@@ -5,6 +5,7 @@ import logging
 import base64
 from datetime import datetime, timedelta, date
 import os
+import keyring
 import requests
 from simple_salesforce import Salesforce
 import json
@@ -12,7 +13,7 @@ import json
 logger = logging.getLogger("salesforce_expense")
 
 
-class TimecardEntry(object):
+class ExpenseEntry(object):
 
 
     def __init__(self, cfg="~/.pse.json"):
@@ -26,8 +27,8 @@ class TimecardEntry(object):
             password = base64.b64decode(self.cfg["password"]).decode()
             security_token = self.cfg["token"]
         elif credential_store == 'keyring':
-            password = keyring.get_password("salesforce_cli", f"{self.cfg["username"]}_password")
-            security_token = keyring.get_password("salesforce_cli", f"{self.cfg["username"]}_token")
+            password = keyring.get_password("salesforce_cli", f"{self.cfg['username']}_password")
+            security_token = keyring.get_password("salesforce_cli", f"{self.cfg['username']}_token")
 
         self.sf = Salesforce(username=self.cfg["username"],
                              password=password,

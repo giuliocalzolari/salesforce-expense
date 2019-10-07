@@ -8,10 +8,13 @@ import cv2
 import os
 from functools import wraps
 import click
+import keyring
+import base64
+from getpass import getpass
 from click_aliases import ClickAliasedGroup
 from tabulate import tabulate
 from datetime import datetime, timedelta, date
-from salesforce_expense.core import TimecardEntry
+from salesforce_expense.core import ExpenseEntry
 from salesforce_expense import __version__, __description__
 
 logger = logging.getLogger("salesforce_expense")
@@ -21,7 +24,7 @@ handler.setFormatter(logging.Formatter(FORMAT))
 logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
-te = TimecardEntry()
+te = ExpenseEntry()
 
 
 CATEGORY = ["Accommodation", "Client entertainment", "Car hire", "Flights", "Fuel", "Internet", "IT consumables" , "IT services (subscription &amp; licences)", "Mileage",
@@ -60,6 +63,28 @@ def cli(ctx, verbose):  # pragma: no cover
         "options": {}
     }
 
+
+@cli.command(name="configure", aliases=["c", "cfg"])
+@click.argument('username')
+@click.pass_context
+@catch_exceptions
+def configure(ctx, username):
+
+        _passwd = getpass(f"password for {username}: ")
+        keyring.set_password("salesforce_cli", f"{username}_password", _passwd)
+        passwd = keyring.get_password("salesforce_cli", f"{username}_password")
+        if not passwd:
+            logger.critical(f"error on saving password in {username}_password")
+            sys.exit(1)
+
+        _security_token = getpass(f"security_token for {username}: ")
+        keyring.set_password("salesforce_cli", f"{username}_token", _security_token)
+        token = keyring.get_password("salesforce_cli", f"{username}_token")
+        if not token:
+            logger.critical(f"error on saving password in {username}_token")
+            sys.exit(1)  
+
+        print("configuration done!!!")  
 
 # def show_webcam(mirror=False):
 #     cam = cv2.VideoCapture(0)
